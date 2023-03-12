@@ -1,13 +1,30 @@
 from tkinter import *
 from tkinter import ttk
 from PIL import Image, ImageTk
-
+import mysql.connector
+from tkinter import messagebox
 
 class Student:
     def __init__(self, root):
         self.root = root
         self.root.geometry("1530x790+0+0")
         self.root.title("STUDENT MANAGEMENT SYSTEM")
+
+        # Variables
+        self.var_dep=StringVar()
+        self.var_course=StringVar()
+        self.var_year=StringVar()
+        self.var_semester=StringVar()
+        self.var_std_id=StringVar()
+        self.var_std_name=StringVar()
+        self.var_div=StringVar()
+        self.var_roll=StringVar()
+        self.var_gender=StringVar()
+        self.var_dob=StringVar()
+        self.var_email=StringVar()
+        self.var_phone=StringVar()
+        self.var_address=StringVar()
+        self.var_teacher=StringVar()
 
         # 1st
         img = Image.open("./college_images/7th.jpg")
@@ -76,7 +93,7 @@ class Student:
                         font=("arial", 12, "bold"), bg="white")
         lbl_dep.grid(row=0, column=0, padx=2, pady=10, sticky=W)
 
-        combo_dep = ttk.Combobox(std_lbl_info_frame, font=(
+        combo_dep = ttk.Combobox(std_lbl_info_frame,textvariable=self.var_dep, font=(
             "arial", 12, "bold"), width=17, state="readonly")
         combo_dep["value"] = ("Select Department", "CSE",
                               "IT", "ECE", "EE", "ME", "CE")
@@ -88,7 +105,7 @@ class Student:
                            font=("arial", 12, "bold"), bg="white")
         course_std.grid(row=0, column=2, padx=2, pady=10, sticky=W)
 
-        com_txtcourse_std = ttk.Combobox(std_lbl_info_frame, font=(
+        com_txtcourse_std = ttk.Combobox(std_lbl_info_frame,textvariable=self.var_course, font=(
             "arial", 12, "bold"), width=17, state="readonly")
         com_txtcourse_std["value"] = (
             "Select Course", "Operating System", "Computer Network", "DSA", "Compiler Design", "DBMS")
@@ -100,7 +117,7 @@ class Student:
                              font=("arial", 12, "bold"), bg="white")
         current_year.grid(row=1, column=0, padx=2, pady=10, sticky=W)
 
-        com_txt_current_year = ttk.Combobox(std_lbl_info_frame, font=(
+        com_txt_current_year = ttk.Combobox(std_lbl_info_frame,textvariable=self.var_year, font=(
             "arial", 12, "bold"), width=17, state="readonly")
         com_txt_current_year["value"] = (
             "Select Year", "2020-2021", "2021-2022", "2022-2023", "2023-2024")
@@ -112,7 +129,7 @@ class Student:
             "arial", 12, "bold"), bg="white")
         label_Semester.grid(row=1, column=2, padx=2, pady=10, sticky=W)
 
-        comSemester = ttk.Combobox(std_lbl_info_frame, font=(
+        comSemester = ttk.Combobox(std_lbl_info_frame,textvariable=self.var_semester, font=(
             "arial", 12, "bold"), width=17, state="readonly")
         comSemester["value"] = ("Select Semester", "Semester-1", "Semester-2", "Semester-3",
                                 "Semester-4", "Semester-5", "Semester-6", "Semester-7", "Semester-8")
@@ -129,7 +146,7 @@ class Student:
                        font=("arial", 11, "bold"), bg="white")
         lbl_id.grid(row=0, column=0, padx=2, pady=7, sticky=W)
 
-        id_entry = ttk.Entry(std_lbl_class_frame, font=(
+        id_entry = ttk.Entry(std_lbl_class_frame,textvariable=self.var_std_id, font=(
             "arial", 11, "bold"), width=22)
         id_entry.grid(row=0, column=1, padx=2, pady=7, sticky=W)
 
@@ -138,7 +155,7 @@ class Student:
                          font=("arial", 11, "bold"), bg="white")
         lbl_Name.grid(row=0, column=2, padx=2, pady=7, sticky=W)
 
-        txt_name = ttk.Entry(std_lbl_class_frame, font=(
+        txt_name = ttk.Entry(std_lbl_class_frame,textvariable=self.var_std_name, font=(
             "arial", 11, "bold"), width=22)
         txt_name.grid(row=0, column=3, padx=2, pady=7, sticky=W)
 
@@ -147,7 +164,7 @@ class Student:
                         font=("arial", 11, "bold"), bg="white")
         lbl_div.grid(row=1, column=0, padx=2, pady=7, sticky=W)
 
-        com_txt_div = ttk.Combobox(std_lbl_class_frame, font=(
+        com_txt_div = ttk.Combobox(std_lbl_class_frame,textvariable=self.var_div, font=(
             "arial", 12, "bold"), width=18, state="readonly")
         com_txt_div['value'] = ("Select Division", "A", "B", "C")
         com_txt_div.current(0)
@@ -158,7 +175,7 @@ class Student:
                          font=("arial", 11, "bold"), bg="white")
         lbl_roll.grid(row=1, column=2, padx=2, pady=7, sticky=W)
 
-        txt_roll = ttk.Entry(std_lbl_class_frame, font=(
+        txt_roll = ttk.Entry(std_lbl_class_frame,textvariable=self.var_roll, font=(
             "arial", 11, "bold"), width=22)
         txt_roll.grid(row=1, column=3, padx=2, pady=7, sticky=W)
 
@@ -167,7 +184,7 @@ class Student:
                            font=("arial", 11, "bold"), bg="white")
         lbl_gender.grid(row=2, column=0, padx=2, pady=7, sticky=W)
 
-        com_txt_gender = ttk.Combobox(std_lbl_class_frame, font=(
+        com_txt_gender = ttk.Combobox(std_lbl_class_frame,textvariable=self.var_gender, font=(
             "arial", 12, "bold"), width=18, state="readonly")
         com_txt_gender['value'] = ("Male", "Female", "Other")
         com_txt_gender.current(0)
@@ -178,7 +195,7 @@ class Student:
                         font=("arial", 11, "bold"), bg="white")
         lbl_dob.grid(row=2, column=2, padx=2, pady=7, sticky=W)
 
-        txt_dob = ttk.Entry(std_lbl_class_frame, font=(
+        txt_dob = ttk.Entry(std_lbl_class_frame,textvariable=self.var_dob, font=(
             "arial", 11, "bold"), width=22)
         txt_dob.grid(row=2, column=3, padx=2, pady=7, sticky=W)
 
@@ -187,7 +204,7 @@ class Student:
                           font=("arial", 11, "bold"), bg="white")
         lbl_email.grid(row=3, column=0, padx=2, pady=7, sticky=W)
 
-        txt_email = ttk.Entry(std_lbl_class_frame, font=(
+        txt_email = ttk.Entry(std_lbl_class_frame,textvariable=self.var_email, font=(
             "arial", 11, "bold"), width=22)
         txt_email.grid(row=3, column=1, padx=2, pady=7, sticky=W)
 
@@ -196,7 +213,7 @@ class Student:
                           font=("arial", 11, "bold"), bg="white")
         lbl_phone.grid(row=3, column=2, padx=2, pady=7, sticky=W)
 
-        txt_phone = ttk.Entry(std_lbl_class_frame, font=(
+        txt_phone = ttk.Entry(std_lbl_class_frame,textvariable=self.var_phone, font=(
             "arial", 11, "bold"), width=22)
         txt_phone.grid(row=3, column=3, padx=2, pady=7, sticky=W)
 
@@ -205,7 +222,7 @@ class Student:
                             font=("arial", 11, "bold"), bg="white")
         lbl_address.grid(row=4, column=0, padx=2, pady=7, sticky=W)
 
-        txt_address = ttk.Entry(std_lbl_class_frame, font=(
+        txt_address = ttk.Entry(std_lbl_class_frame,textvariable=self.var_address, font=(
             "arial", 11, "bold"), width=22)
         txt_address.grid(row=4, column=1, padx=2, pady=7, sticky=W)
 
@@ -214,7 +231,7 @@ class Student:
                             font=("arial", 11, "bold"), bg="white")
         lbl_teacher.grid(row=4, column=2, padx=2, pady=7, sticky=W)
 
-        txt_teacher = ttk.Entry(std_lbl_class_frame, font=(
+        txt_teacher = ttk.Entry(std_lbl_class_frame,textvariable=self.var_teacher, font=(
             "arial", 11, "bold"), width=22)
         txt_teacher.grid(row=4, column=3, padx=2, pady=7, sticky=W)
 
@@ -222,7 +239,7 @@ class Student:
         btn_frame = Frame(DataLeftFrame, bd=2, relief=RIDGE, bg="white")
         btn_frame.place(x=0, y=470, width=650, height=38)
 
-        btn_Add = Button(btn_frame, text="Save", font=(
+        btn_Add = Button(btn_frame, text="Save",command=self.add_data, font=(
             "arial", 11, "bold"), width=17, bg="blue", fg="white")
         btn_Add.grid(row=0, column=0, padx=1)
 
@@ -281,7 +298,83 @@ class Student:
         btn_ShowAll.grid(row=0, column=4, padx=5)
 
         # ========================Student Table and Scroll Bar====================
+        table_frame=Frame(DataRightFrame,bd=4,relief=RIDGE)
+        table_frame.place(x=0,y=260,width=790,height=250)
 
+        scroll_x=ttk.Scrollbar(table_frame,orient=HORIZONTAL)
+        scroll_y=ttk.Scrollbar(table_frame,orient=VERTICAL)
+        self.student_table=ttk.Treeview(table_frame,column=("dep","course","year","sem","id","name","div","roll","gender","dob","email","phone","address","teacher"),xscrollcommand=scroll_x.set,yscrollcommand=scroll_y.set)
+
+        scroll_x.pack(side=BOTTOM,fill=X)
+        scroll_y.pack(side=RIGHT,fill=Y)
+
+        scroll_x.config(command=self.student_table.xview)
+        scroll_y.config(command=self.student_table.yview)
+
+        self.student_table.heading("dep",text="Department")
+        self.student_table.heading("course",text="Course")
+        self.student_table.heading("year",text="Year")
+        self.student_table.heading("sem",text="Semester")
+        self.student_table.heading("id",text="StudentID")
+        self.student_table.heading("name",text="Student Name")
+        self.student_table.heading("div",text="Class Div")
+        self.student_table.heading("roll",text="Roll No")
+        self.student_table.heading("gender",text="Gender")
+        self.student_table.heading("dob",text="DOB")
+        self.student_table.heading("email",text="Email")
+        self.student_table.heading("phone",text="Phone No")
+        self.student_table.heading("address",text="Address")
+        self.student_table.heading("teacher",text="Teacher Name")
+
+        self.student_table["show"]="headings"
+
+        self.student_table.column("dep",width=100)
+        self.student_table.column("course",width=100)
+        self.student_table.column("year",width=100)
+        self.student_table.column("sem",width=100)
+        self.student_table.column("id",width=100)
+        self.student_table.column("name",width=100)
+        self.student_table.column("div",width=100)
+        self.student_table.column("roll",width=100)
+        self.student_table.column("gender",width=100)
+        self.student_table.column("dob",width=100)
+        self.student_table.column("email",width=100)
+        self.student_table.column("phone",width=100)
+        self.student_table.column("address",width=100)
+        self.student_table.column("teacher",width=100)
+
+        self.student_table.pack(fill=BOTH, expand=1)
+
+    def add_data(self):
+        if (self.var_dep.get()=="" or self.var_email.get()=="" or self.var_std_id.get()==""):
+            messagebox.showerror("Error","All Fields Are Required")
+        else:
+            try:
+                conn=mysql.connector.connect(host="localhost",username="root",password="Supreme@9748",database="mydata")
+                my_cursur=conn.cursor()
+                my_cursur.execute("insert into student values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(
+                                                                                                            self.var_dep.get(),
+                                                                                                            self.var_course.get(),
+                                                                                                            self.var_year.get(),
+                                                                                                            self.var_semester.get(),
+                                                                                                            self.var_std_id.get(),
+                                                                                                            self.var_std_name.get(),
+                                                                                                            self.var_div.get(),
+                                                                                                            self.var_roll.get(),
+                                                                                                            self.var_gender.get(),
+                                                                                                            self.var_dob.get(),
+                                                                                                            self.var_email.get(),
+                                                                                                            self.var_phone.get(),
+                                                                                                            self.var_address.get(),
+                                                                                                            self.var_teacher.get()
+                                                                                                    ))
+                conn.commit()
+                conn.close()
+                messagebox.showinfo("Sucess","Student has been added!",parent=self.root)
+
+            except Exception as es:
+                messagebox.showerror("Error",f"Due to:{str(es)}",parent=self.root)
+        
 if __name__ == "__main__":
     root = Tk()
     obj = Student(root)
