@@ -243,15 +243,15 @@ class Student:
             "arial", 11, "bold"), width=17, bg="blue", fg="white")
         btn_Add.grid(row=0, column=0, padx=1)
 
-        btn_update = Button(btn_frame, text="Update", font=(
+        btn_update = Button(btn_frame, text="Update",command=self.update_data, font=(
             "arial", 11, "bold"), width=17, bg="blue", fg="white")
         btn_update.grid(row=0, column=1, padx=1)
 
-        btn_Delete = Button(btn_frame, text="Delete", font=(
+        btn_Delete = Button(btn_frame, text="Delete",command=self.delete_data, font=(
             "arial", 11, "bold"), width=17, bg="blue", fg="white")
         btn_Delete.grid(row=0, column=2, padx=1)
 
-        btn_Reset = Button(btn_frame, text="Reset", font=(
+        btn_Reset = Button(btn_frame, text="Reset",command=self.reset_data, font=(
             "arial", 11, "bold"), width=17, bg="blue", fg="white")
         btn_Reset.grid(row=0, column=3, padx=1)
 
@@ -259,7 +259,7 @@ class Student:
         DataRightFrame = LabelFrame(Manage_frame, bd=4, relief=RIDGE, padx=2, text="Student Information", font=(
             "times new roman", 12, "bold"), fg="red", bg="white")
         DataRightFrame.place(x=680, y=10, width=800, height=540)
-
+ 
         # img2
         img_6 = Image.open("./college_images/6th.jpg")
         img_6 = img_6.resize((780, 200), Image.ANTIALIAS)
@@ -278,22 +278,25 @@ class Student:
                           font=("arial", 11, "bold"), fg="red", bg="black")
         search_by.grid(row=0, column=0, padx=5, sticky=W)
 
-        com_txt_search = ttk.Combobox(Search_Frame, font=(
+        # Search
+        self.var_com_search=StringVar()
+        com_txt_search = ttk.Combobox(Search_Frame,textvariable=self.var_com_search, font=(
             "arial", 12, "bold"), width=18, state="readonly")
         com_txt_search['value'] = (
             "Select Option", "Roll", "Phone", "student_id")
         com_txt_search.current(0)
         com_txt_search.grid(row=0, column=1, sticky=W, padx=5)
 
-        txt_search = ttk.Entry(Search_Frame, font=(
+        self.var_search=StringVar()
+        txt_search = ttk.Entry(Search_Frame,textvariable=self.var_search, font=(
             "arial", 11, "bold"), width=22)
         txt_search.grid(row=0, column=2, padx=5)
 
-        btn_search = Button(Search_Frame, text="Search", font=(
+        btn_search = Button(Search_Frame,command=self.search_data, text="Search", font=(
             "arial", 11, "bold"), width=14, bg="blue", fg="white")
         btn_search.grid(row=0, column=3, padx=5)
 
-        btn_ShowAll = Button(Search_Frame, text="Show All", font=(
+        btn_ShowAll = Button(Search_Frame,command=self.fetch_data, text="Show All", font=(
             "arial", 11, "bold"), width=14, bg="blue", fg="white")
         btn_ShowAll.grid(row=0, column=4, padx=5)
 
@@ -344,6 +347,8 @@ class Student:
         self.student_table.column("teacher",width=100)
 
         self.student_table.pack(fill=BOTH, expand=1)
+        self.student_table.bind("<ButtonRelease>",self.get_cursor)
+        self.fetch_data()
 
     def add_data(self):
         if (self.var_dep.get()=="" or self.var_email.get()=="" or self.var_std_id.get()==""):
@@ -369,11 +374,144 @@ class Student:
                                                                                                             self.var_teacher.get()
                                                                                                     ))
                 conn.commit()
+                self.fetch_data()
                 conn.close()
                 messagebox.showinfo("Sucess","Student has been added!",parent=self.root)
 
             except Exception as es:
                 messagebox.showerror("Error",f"Due to:{str(es)}",parent=self.root)
+        
+    # Fetch Function
+    def fetch_data(self):
+        conn=mysql.connector.connect(host="localhost",username="root",password="Supreme@9748",database="mydata")
+        my_cursur=conn.cursor()
+        my_cursur.execute("SELECT * FROM student")
+        data=my_cursur.fetchall()
+
+        if len(data)!=0:
+            self.student_table.delete(*self.student_table.get_children())
+            for i in data:
+                self.student_table.insert("",END,values=i)
+            conn.commit()
+        conn.close()
+
+    # Get Cursor
+    def get_cursor(self,event=""):
+        cursor_row=self.student_table.focus()
+        content=self.student_table.item(cursor_row)
+        data=content["values"]
+
+        self.var_dep.set(data[0])
+        self.var_course.set(data[1])
+        self.var_year.set(data[2])
+        self.var_semester.set(data[3])
+        self.var_std_id.set(data[4])
+        self.var_std_name.set(data[5])
+        self.var_div.set(data[6])
+        self.var_roll.set(data[7])
+        self.var_gender.set(data[8])
+        self.var_dob.set(data[9])
+        self.var_email.set(data[10])
+        self.var_phone.set(data[11])
+        self.var_address.set(data[12])
+        self.var_teacher.set(data[13])
+
+    # Update 
+    def update_data(self):
+        if (self.var_dep.get()=="" or self.var_email.get()=="" or self.var_std_id.get()==""):
+            messagebox.showerror("Error","All Fields Are Required")
+        else:
+            try:
+                update=messagebox.askyesno("Update","Are you sure update this student data",parent=self.root)
+                if update>0:
+                    conn=mysql.connector.connect(host="localhost",username="root",password="Supreme@9748",database="mydata")
+                    my_cursur=conn.cursor()
+                    my_cursur.execute("UPDATE student set Dep=%s,course=%s,Year=%s,Semester=%s,Name=%s,Division=%s,Roll=%s,Gender=%s,Dob=%s,Email=%s,Phone=%s,Address=%s,Teacher=%s WHERE student_id=%s",(
+                                                                                                                                                                self.var_dep.get(),
+                                                                                                                                                                self.var_course.get(),
+                                                                                                                                                                self.var_year.get(),
+                                                                                                                                                                self.var_semester.get(),
+                                                                                                                                                                self.var_std_name.get(),
+                                                                                                                                                                self.var_div.get(),
+                                                                                                                                                                self.var_roll.get(),
+                                                                                                                                                                self.var_gender.get(),
+                                                                                                                                                                self.var_dob.get(),
+                                                                                                                                                                self.var_email.get(),
+                                                                                                                                                                self.var_phone.get(),
+                                                                                                                                                                self.var_address.get(),
+                                                                                                                                                                self.var_teacher.get(),
+                                                                                                                                                                self.var_std_id.get()
+                                                                                                                                                                ))
+                else:
+                    if not update:
+                        return
+                conn.commit()
+                self.fetch_data()
+                conn.close()
+                messagebox.showinfo("Error","Student has been added!",parent=self.root)
+            except Exception as es:
+                 messagebox.showerror("Error",f"Due to:{str(es)}",parent=self.root)
+            
+    # Delete
+    def delete_data(self):
+        if  self.var_std_id.get()=="":
+            messagebox.showerror("Error","Student ID Required")
+        else:
+            try:
+                Delete=messagebox.askyesno("Delete","Are you sure you want to delete this student")
+                if Delete>0:
+                    conn=mysql.connector.connect(host="localhost",username="root",password="Supreme@9748",database="mydata")
+                    my_cursur=conn.cursor()
+                    sql="DELETE FROM student WHERE student_id=%s"
+                    value=(self.var_std_id.get(),)
+                    my_cursur.execute(sql,value)
+                else:
+                    if not Delete:
+                        return
+                conn.commit()
+                self.fetch_data()
+                conn.close()
+                messagebox.showinfo("Delete","Your Student has been Deleted",parent=self.root)
+            except Exception as es:
+                 messagebox.showerror("Error",f"Due to:{str(es)}",parent=self.root)
+
+    # Reset
+    def reset_data(self):
+        self.var_dep.set("Select Department")
+        self.var_course.set("Select Course")
+        self.var_year.set("Select Year")
+        self.var_semester.set("Select Semester")
+        self.var_std_id.set("")
+        self.var_std_name.set("")
+        self.var_div.set("Select Division")
+        self.var_roll.set("")
+        self.var_gender.set("")
+        self.var_dob.set("")
+        self.var_email.set("")
+        self.var_phone.set("")
+        self.var_address.set("")
+        self.var_teacher.set("")
+
+    # Search
+    def search_data(self):
+        if (self.var_com_search.get()=="" or self.var_search.get()==""):
+            messagebox.showerror("Error","Please Select Option")
+        else:
+            try:
+                conn=mysql.connector.connect(host="localhost",username="root",password="Supreme@9748",database="mydata")
+                my_cursor=conn.cursor()
+                my_cursor.execute("SELECT * FROM student WHERE " +str(self.var_com_search.get())+" LIKE '%"+str(self.var_search.get())+"%'")
+                rows=my_cursor.fetchall()
+
+                if len(rows)!=0:
+                    self.student_table.delete(*self.student_table.get_children())
+                    for i in rows:
+                        self.student_table.insert("",END,values=i)
+                    conn.commit()
+                conn.close()
+            except Exception as es:
+                 messagebox.showerror("Error",f"Due to:{str(es)}",parent=self.root)
+
         
 if __name__ == "__main__":
     root = Tk()
