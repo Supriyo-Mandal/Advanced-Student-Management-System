@@ -14,9 +14,9 @@ Also this program requires MySQL and Tkinter to be pre-installed in the device w
 * Run the python file. 
 
 ## Features :
-* Save Record
-* Update Record
-* Delete Record
+* Add Student Information
+* Update Student Information
+* Delete Student Information
 * Data reset
 
 ## Screenshot of the Interface:
