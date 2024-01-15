@@ -27,9 +27,10 @@ Also this program requires MySQL and Tkinter to be pre-installed in the device w
 
 - **Search Student**: Allows users to search for specific student records based on various criteria such as student ID, phone number, or roll number.
 
-## 📷 Screenshot of the Interface:
+## 📷 Demo
+Here's a brief demonstration of the face recognition system in action:
 
-![Screenshot 2023-04-01 010744](https://user-images.githubusercontent.com/89782123/229213580-baf6e5f7-eb54-4cb8-b738-2e799559e1e3.png)
+<img align="center" src="ASM Video.gif" alt="GIF Title" width="1000" height="500">
 
 ## 🌏 Installation
 1. **Clone the Repository**:
