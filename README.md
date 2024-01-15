@@ -2,6 +2,11 @@
 
 This **Student Management System** is a Python application that allows users to manage student records. It provides a user-friendly graphical interface for adding, updating, deleting, and searching for student information. The application uses the **Tkinter library for the GUI** and **MySQL for the database**.
 
+## 📷 Demo
+Here's a brief demonstration of the face recognition system in action:
+
+<img align="center" src="ASM Video.gif" alt="GIF Title" width="1000" height="500">
+
 ## 💻 Technology :
 - **Python 3.0**: The application is built using Python 3.0, a versatile programming language known for its simplicity and readability.
 
@@ -27,10 +32,6 @@ Also this program requires MySQL and Tkinter to be pre-installed in the device w
 
 - **Search Student**: Allows users to search for specific student records based on various criteria such as student ID, phone number, or roll number.
 
-## 📷 Demo
-Here's a brief demonstration of the face recognition system in action:
-
-<img align="center" src="ASM Video.gif" alt="GIF Title" width="1000" height="500">
 
 ## 🌏 Installation
 1. **Clone the Repository**:
